@@ -1,0 +1,40 @@
+[tools]
+java = "oracle-25.0.3"
+gradle = "9.6.1"
+snyk = "1.1306.0"
+gitleaks = "8.30.1"
+trufflehog = "3.95.9"
+miniserve = "0.35.0"
+
+[tasks]
+# Añades el escaneo de seguridad a tus tareas globales
+"security:scan" = { run = "snyk test" }
+
+"git:init" = { run = "mise generate git-pre-commit --write --task=lint" }
+
+"lint" = { depends = [
+    "lint:whitespace",
+    "lint:eof",
+    "lint:json",
+    "lint:yaml",
+    "lint:toml",
+    "lint:xml",
+    "lint:private-keys",
+    "lint:checkstyle",
+    "lint:secrets",
+    "lint:dependencies"
+] }
+
+"lint:whitespace" = { run = "find src/ .devcontainer/ *.toml *.xml *.json -type f -exec sed -i 's/[[:space:]]*$//' {} +" }
+"lint:eof" = { run = "find src/ .devcontainer/ *.toml *.xml *.json -type f -exec awk 'NF {last=$0} END {if (last !~ /\\n$/) print \"\"}' {} +" }
+"lint:json" = { run = "find . -name '*.json' ! -path '*/.*' -exec jq --indent 2 '.' {} \\;" }
+"lint:yaml" = { run = "find . -name '*.yaml' -o -name '*.yml' -exec grep -q '^' {} \\;" }
+"lint:toml" = { run = "taplo fmt --check" }
+"lint:xml" = { run = "java -jar /workspace/.cache/google-style-java.jar --help > /dev/null" } 
+"lint:private-keys" = { run = "! grep -qE '---BEGIN (RSA|OPENSSH|PRIVATE) KEY---' $(find . -type f ! -path '*/.*')" }
+"lint:checkstyle" = { run = "./gradlew checkstyleMain" }
+"lint:dependencies" = { run = "./gradlew dependencyCheckAnalyze --no-daemon" }
+"lint:secrets" = { run = "gitleaks protect --staged --verbose" }
+"lint:trufflehog" = { run = "trufflehog filesystem --only-verified --staged ." }
+"lint:commit-message" = { run = "grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([a-z0-9_-]+\\))?!?: .+' .git/COMMIT_EDITMSG" }
+"docs:serve" = { run = "miniserve ./docs --index index.html -p 3000" }

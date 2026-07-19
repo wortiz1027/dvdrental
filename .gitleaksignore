@@ -1,0 +1,2 @@
+# Ignorar archivos de pruebas unitarias
+src/test/java/**/*
