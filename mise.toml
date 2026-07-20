@@ -54,20 +54,9 @@ _.path = [
 "lint:commit-message" = { run = "grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([a-z0-9_-]+\\))?!?: .+' .git/COMMIT_EDITMSG" }
 "docs:serve" = { run = "miniserve ./docs --index index.html -p 3000" }
 
+[hooks]
+postinstall = ".devcontainer/dev/sync-env.sh"
+
 [[watch_files]]
 patterns = ["mise.toml"]
-shell = "zsh -c"
-run = """
-    mkdir -p /home/vscode/.local/share/mise/installs/java
-    CURRENT_JAVA="$(mise where java 2>/dev/null)"
-
-    # Solo actualiza el enlace simbólico si detecta un cambio real en el disco para evitar bucles
-    if [ -n "$CURRENT_JAVA" ] && [ "$(readlink /home/vscode/.local/share/mise/installs/java/latest)" != "$CURRENT_JAVA" ]; then
-        rm -f /home/vscode/.local/share/mise/installs/java/latest
-        ln -sf "$CURRENT_JAVA" /home/vscode/.local/share/mise/installs/java/latest
-        echo "Mise redirigió reactivamente el enlace genérico a: $CURRENT_JAVA"
-    fi
-
-    # Control inteligente para escribir una única vez en el .zshrc
-    grep -qF '$JAVA_HOME/bin:$GRADLE_HOME/bin' ~/.zshrc || echo 'export PATH="$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin"' >> ~/.zshrc
-"""
+run = ".devcontainer/dev/sync-env.sh"
