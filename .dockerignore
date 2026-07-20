@@ -1,0 +1,37 @@
+# --- Carpetas de Compilación e Inicialización (Gradle) ---
+.gradle/
+build/
+bin/
+out/
+
+# --- Reportes y Archivos Temporales ---
+.gradle-tasks-logs/
+*.log
+*.tmp
+
+# --- Configuraciones de Entorno y Extensiones de Contenedor ---
+.devcontainer/
+.dockerignore
+Dockerfile
+docker-compose*.yml
+mise.toml
+.mise/
+
+# --- Configuraciones del IDE y Editores ---
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+.factorypath
+
+# --- Sistema Operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Control de Versiones (Opcional, desmarcar si necesitas Git en el build) ---
+.git
+.gitignore

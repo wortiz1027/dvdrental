@@ -12,14 +12,17 @@
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="error"/>
     <property name="fileExtensions" value="java"/>
-    <!-- Suppressions for test files (allow snake_case method names) -->
+
+    <!-- CORRECCIÓN: Se usa una variable estándar compatible con Gradle -->
     <module name="SuppressionFilter">
         <property name="file" value="${config_loc}/suppressions.xml"/>
     </module>
+
     <!-- Suppress checks on generated sources -->
     <module name="BeforeExecutionExclusionFileFilter">
         <property name="fileNamePattern" value=".*[\\/]build[\\/].*"/>
     </module>
+
     <!-- File-level checks -->
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
@@ -28,6 +31,7 @@
         <property name="max" value="120"/>
         <property name="ignorePattern" value="^package.*|^import.*|a]* href|href|http://|https://|ftp://"/>
     </module>
+
     <module name="TreeWalker">
         <!-- ========== Naming Conventions ========== -->
         <module name="PackageName">
@@ -51,10 +55,12 @@
         <module name="ConstantName">
             <property name="format" value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
         </module>
+
         <!-- ========== Imports ========== -->
         <module name="AvoidStarImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
+
         <!-- ========== Code Quality ========== -->
         <module name="EqualsHashCode"/>
         <module name="SimplifyBooleanExpression"/>
@@ -63,20 +69,25 @@
         <module name="NestedTryDepth">
             <property name="max" value="2"/>
         </module>
+
         <!-- ========== Best Practices ========== -->
         <module name="OneStatementPerLine"/>
         <module name="MultipleVariableDeclarations"/>
         <module name="MissingSwitchDefault"/>
         <module name="DefaultComesLast"/>
         <module name="FallThrough"/>
+
         <!-- ========== Modifiers ========== -->
         <module name="ModifierOrder"/>
         <module name="RedundantModifier"/>
+
         <!-- ========== Annotations ========== -->
         <module name="MissingOverride"/>
+
         <!-- ========== Whitespace (complementary to Spotless) ========== -->
+        <!-- CORRECCIÓN: Se removió INDEX_OP por obsolescencia en Checkstyle moderno -->
         <module name="NoWhitespaceAfter">
-            <property name="tokens" value="AT,INC,DEC,UNARY_MINUS,UNARY_PLUS,BNOT,LNOT,DOT,ARRAY_DECLARATOR,INDEX_OP"/>
+            <property name="tokens" value="AT,INC,DEC,UNARY_MINUS,UNARY_PLUS,BNOT,LNOT,DOT,ARRAY_DECLARATOR"/>
         </module>
         <module name="NoWhitespaceBefore"/>
     </module>

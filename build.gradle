@@ -3,7 +3,8 @@ plugins {
 	id 'checkstyle'
 	id 'org.springframework.boot' version '4.1.0'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id "org.owasp.dependencycheck" version "12.2.2" 
+	id "org.owasp.dependencycheck" version "12.2.2"
+	id 'com.diffplug.spotless' version '8.8.0'
 }
 
 group = 'co.com.devsoft'
@@ -57,10 +58,7 @@ tasks.named('test') {
 
 checkstyle {
     toolVersion = '13.8.0'
-    configFile = file("${rootProject.projectDir}/.config/checkstyle/checkstyle.xml")
-    configProperties = [
-						suppressionsFile: "${rootProject.projectDir}/.config/checkstyle/suppressions.xml"
-					   ]
+    configDirectory = file("${rootProject.projectDir}/.config/checkstyle")
     ignoreFailures = false
 	showViolations = true
 }
@@ -76,4 +74,14 @@ dependencyCheck {
     
     // Opcional: Si deseas omitir ciertas configuraciones (como librerías exclusivas de pruebas)
     // skipConfigurations = ['testCompileClasspath', 'testRuntimeClasspath']
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'          // Escanea todos tus archivos de código Java
+        googleJavaFormat('1.35.0')      // Descarga y aplica el estilo oficial de Google
+        removeUnusedImports()           // Borra los imports muertos automáticamente
+        trimTrailingWhitespace()        // Elimina espacios basura al final de las líneas
+        endWithNewline()                // Asegura un salto de línea limpio al final del archivo
+    }
 }

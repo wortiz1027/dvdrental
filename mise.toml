@@ -5,6 +5,21 @@ snyk = "1.1306.0"
 gitleaks = "8.30.1"
 trufflehog = "3.95.9"
 miniserve = "0.35.0"
+lazygit = "0.63.0"
+taplo = "0.10.0"
+
+[tool_alias.java.versions]
+oracle = "oracle-25.0.3"
+
+[tool_alias.gradle.versions]
+latest = "9.6.1"
+
+[env]
+JAVA_HOME = "/home/vscode/.local/share/mise/installs/java/latest"
+GRADLE_HOME = "/home/vscode/.local/share/mise/installs/gradle/latest"
+_.path = [
+  "/home/vscode/.local/share/mise/installs/java/latest/bin:/home/vscode/.local/share/mise/installs/gradle/latest/bin",
+]
 
 [tasks]
 # Añades el escaneo de seguridad a tus tareas globales
@@ -13,28 +28,46 @@ miniserve = "0.35.0"
 "git:init" = { run = "mise generate git-pre-commit --write --task=lint" }
 
 "lint" = { depends = [
-    "lint:whitespace",
-    "lint:eof",
-    "lint:json",
-    "lint:yaml",
-    "lint:toml",
-    "lint:xml",
-    "lint:private-keys",
-    "lint:checkstyle",
-    "lint:secrets",
-    "lint:dependencies"
+  "lint:whitespace",
+  "lint:eof",
+  "lint:json",
+  "lint:yaml",
+  "lint:toml",
+  "lint:xml",
+  "lint:private-keys",
+  "lint:checkstyle",
+  "lint:secrets",
+  "lint:dependencies",
 ] }
 
-"lint:whitespace" = { run = "find src/ .devcontainer/ *.toml *.xml *.json -type f -exec sed -i 's/[[:space:]]*$//' {} +" }
-"lint:eof" = { run = "find src/ .devcontainer/ *.toml *.xml *.json -type f -exec awk 'NF {last=$0} END {if (last !~ /\\n$/) print \"\"}' {} +" }
+"lint:whitespace" = { run = "find src/ .devcontainer/ . -maxdepth 1 \\( -name '*.toml' -o -name '*.xml' -o -name '*.json' \\) -type f -exec sed -i 's/[[:space:]]*$//' {} +" }
+"lint:eof" = { run = "find src/ .devcontainer/ . -maxdepth 1 \\( -name '*.toml' -o -name '*.xml' -o -name '*.json' \\) -type f -exec awk 'NF {last=$0} END {if (last !~ /\\n$/) print \"\"}' {} +" }
 "lint:json" = { run = "find . -name '*.json' ! -path '*/.*' -exec jq --indent 2 '.' {} \\;" }
 "lint:yaml" = { run = "find . -name '*.yaml' -o -name '*.yml' -exec grep -q '^' {} \\;" }
 "lint:toml" = { run = "taplo fmt --check" }
-"lint:xml" = { run = "java -jar /workspace/.cache/google-style-java.jar --help > /dev/null" } 
-"lint:private-keys" = { run = "! grep -qE '---BEGIN (RSA|OPENSSH|PRIVATE) KEY---' $(find . -type f ! -path '*/.*')" }
+"lint:xml" = { run = "java -jar /workspace/.cache/google-style-java.jar --help > /dev/null" }
+"lint:private-keys" = { run = "! grep -qE -e '---BEGIN (RSA|OPENSSH|PRIVATE) KEY---' $(find . -type f ! -path '*/.*')" }
 "lint:checkstyle" = { run = "./gradlew checkstyleMain" }
 "lint:dependencies" = { run = "./gradlew dependencyCheckAnalyze --no-daemon" }
 "lint:secrets" = { run = "gitleaks protect --staged --verbose" }
 "lint:trufflehog" = { run = "trufflehog filesystem --only-verified --staged ." }
 "lint:commit-message" = { run = "grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([a-z0-9_-]+\\))?!?: .+' .git/COMMIT_EDITMSG" }
 "docs:serve" = { run = "miniserve ./docs --index index.html -p 3000" }
+
+[[watch_files]]
+patterns = ["mise.toml"]
+shell = "zsh -c"
+run = """
+    mkdir -p /home/vscode/.local/share/mise/installs/java
+    CURRENT_JAVA="$(mise where java 2>/dev/null)"
+
+    # Solo actualiza el enlace simbólico si detecta un cambio real en el disco para evitar bucles
+    if [ -n "$CURRENT_JAVA" ] && [ "$(readlink /home/vscode/.local/share/mise/installs/java/latest)" != "$CURRENT_JAVA" ]; then
+        rm -f /home/vscode/.local/share/mise/installs/java/latest
+        ln -sf "$CURRENT_JAVA" /home/vscode/.local/share/mise/installs/java/latest
+        echo "Mise redirigió reactivamente el enlace genérico a: $CURRENT_JAVA"
+    fi
+
+    # Control inteligente para escribir una única vez en el .zshrc
+    grep -qF '$JAVA_HOME/bin:$GRADLE_HOME/bin' ~/.zshrc || echo 'export PATH="$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin"' >> ~/.zshrc
+"""

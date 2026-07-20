@@ -18,8 +18,9 @@ EOF
 
 # 3. Actualizar los repositorios e instalar el paquete oficial junto con dependencias necesarias
 sudo apt-get update
-sudo apt-get install -y gopass gnupg2
+sudo apt-get install -y gopass gnupg2 vim zsh
 
 echo "¡Gopass instalado con éxito!"
 
-curl https://mise.run | sh && echo 'eval \"$(/home/vscode/.local/bin/mise activate zsh)\"' >> ~/.zshrc && /home/vscode/.local/bin/mise install && /home/vscode/.local/bin/mise run git:init
+curl https://mise.run | sh && echo 'echo 'eval "$(mise activate zsh)"' >> ~/.zshrc' >> ~/.zshrc && /home/vscode/.local/bin/mise install && /home/vscode/.local/bin/mise run git:init
+

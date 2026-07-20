@@ -36,7 +36,9 @@
 				"java.jdt.ls.java.home": "/home/vscode/.local/share/mise/installs/java/latest",
 				"java.import.gradle.home": "/home/vscode/.local/share/mise/installs/gradle/latest",
 				"git.autocrlf": "input",
-				"sonarlint.ls.javaHome": "/home/vscode/.local/share/mise/installs/java/latest"
+				"sonarlint.ls.javaHome": "/home/vscode/.local/share/mise/installs/java/latest",
+				"editor.insertSpaces": true,
+				"editor.tabSize": 4
 			}
 		}
 	},
@@ -66,15 +68,15 @@
 		"label=disable"
 	],
 	"remoteEnv": {
+		"JAVA_HOME": "/home/vscode/.local/share/mise/installs/java/latest",
+		"MISE_TRUSTED_CONFIG_PATHS": "/workspace",
 		"GOPASS_HOMEDIR": "${containerWorkspaceFolder}/../",
 		"GOPASS_STORE_DIR": "${containerWorkspaceFolder}/../.local/share/gopass/stores/root"
 	},
 	"workspaceFolder": "/workspace",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
 	"onCreateCommand": "sudo chown -R vscode:vscode /workspace",
-	"postCreateCommand": "chmod +x .devcontainer/dev/boostrap.sh && .devcontainer/dev/boostrap.sh",	
-	"updateRemoteUserUID": true,
-	"userEnvProbe": "loginShell",
+	"postCreateCommand": "chmod +x .devcontainer/dev/boostrap.sh && .devcontainer/dev/boostrap.sh",
 	"containerUser": "vscode",
 	"remoteUser": "vscode"
 }
