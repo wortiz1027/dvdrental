@@ -1,6 +1,12 @@
 {
 	"name": "🍃 Ubuntu :: Spring Boot {DvD Rental} 🍃",
 	"image": "mcr.microsoft.com/devcontainers/base:resolute",
+	"hostRequirements": {
+		"cpus": 2,
+		"memory": "6gb",
+		"storage": "5gb",
+		"gpu": true
+	},
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": true,
@@ -16,29 +22,45 @@
 		}
 	},
 	"customizations": {
+		"projectMetadata": {
+			"author": "@DevSoft Team",
+			"repository": "git@github.com:wortiz1027/dvdrental.git",
+			"version": "1.0.0",
+			"license": "MIT",
+			"environment": "Development"
+		},
 		"vscode": {
 			"extensions": [
-				"Oracle.oracle-java",
-				"vscjava.vscode-java-pack",
-				"vscjava.vscode-spring-initializr",
-				"vscjava.vscode-gradle",
-				"vscjava.vscode-java-debug",
-				"vscjava.vscode-java-test",
-				"vscjava.vscode-java-dependency",
-				"redhat.java",
 				"SonarSource.sonarlint-vscode",
 				"snyk-security.snyk-vulnerability-scanner",
 				"anweber.vscode-httpyac",
-				"SonarSource.sonarlint-vscode"
+				"esbenp.prettier-vscode",
+				"EditorConfig.EditorConfig",
+				"GraphQL.vscode-graphql",
+				"redhat.vscode-yaml",
+				"vscjava.vscode-java-pack",
+				"vmware.vscode-boot-dev-pack",
+				"eamodio.gitlens"
 			],
 			"settings": {
-				"terminal.integrated.defaultProfile.linux": "zsh",
+				"dev.containers.forwardWayland": false,
+				"terminal.integrated.defaultProfile.linux": "zsh",				
+				"git.autocrlf": "input",				
+				"editor.insertSpaces": true,
+				"editor.tabSize": 4,
+				"editor.renderIndentGuides": true,
+				"java.compile.nullAnalysis.mode": "automatic",
 				"java.jdt.ls.java.home": "/home/vscode/.local/share/mise/installs/java/latest",
 				"java.import.gradle.home": "/home/vscode/.local/share/mise/installs/gradle/latest",
-				"git.autocrlf": "input",
+				"java.import.gradle.java.home": "/home/vscode/.local/share/mise/installs/java/latest",
 				"sonarlint.ls.javaHome": "/home/vscode/.local/share/mise/installs/java/latest",
-				"editor.insertSpaces": true,
-				"editor.tabSize": 4
+				"java.configuration.runtimes": [
+					{
+						"name": "JavaSE-25",
+						"path": "/home/vscode/.local/share/mise/installs/java/latest",
+						"default": true
+					}
+				]				
 			}
 		}
 	},
@@ -65,8 +87,15 @@
 	],
 	"runArgs": [
 		"--security-opt",
-		"label=disable"
+		"label=disable",
+		"--device", "/dev/dri/card1:/dev/dri/card1",
+		"--device", "/dev/dri/renderD128:/dev/dri/renderD128",
+		"--ipc", "host"
 	],
+	"containerEnv": {
+		"HOST_VIDEO_GID": "482",
+		"HOST_RENDER_GID": "485"
+	},
 	"remoteEnv": {
 		"JAVA_HOME": "/home/vscode/.local/share/mise/installs/java/latest",
 		"MISE_TRUSTED_CONFIG_PATHS": "/workspace",
@@ -76,7 +105,7 @@
 	"workspaceFolder": "/workspace",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
 	"onCreateCommand": "sudo chown -R vscode:vscode /workspace",
-	"postCreateCommand": "chmod +x .devcontainer/dev/boostrap.sh && .devcontainer/dev/boostrap.sh",
+	"updateContentCommand": "chmod +x .devcontainer/dev/boostrap.sh && .devcontainer/dev/boostrap.sh",
 	"containerUser": "vscode",
 	"remoteUser": "vscode"
 }

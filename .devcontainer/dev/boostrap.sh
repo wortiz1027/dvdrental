@@ -18,9 +18,17 @@ EOF
 
 # 3. Actualizar los repositorios e instalar el paquete oficial junto con dependencias necesarias
 sudo apt-get update
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y universe
 sudo apt-get install -y gopass gnupg2 vim zsh
-
 echo "¡Gopass instalado con éxito!"
+
+sudo apt-get update
+sudo apt-get install -y \
+    intel-media-va-driver \
+    mesa-va-drivers \
+    vainfo \
+    igt-gpu-tools
 
 curl https://mise.run | sh && echo 'echo 'eval "$(mise activate zsh)"' >> ~/.zshrc' >> ~/.zshrc && /home/vscode/.local/bin/mise install && /home/vscode/.local/bin/mise run git:init
 
