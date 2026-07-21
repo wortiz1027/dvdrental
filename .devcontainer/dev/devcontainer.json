@@ -5,7 +5,7 @@
 		"cpus": 2,
 		"memory": "6gb",
 		"storage": "5gb",
-		"gpu": true
+		"gpu": false
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {
@@ -40,12 +40,21 @@
 				"redhat.vscode-yaml",
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
-				"eamodio.gitlens"
+				"GraphQL.vscode-graphql-syntax"
 			],
 			"settings": {
+				"git.blame.editorDecoration.enabled": true,
+				"git.blame.statusBarItem.enabled": true,
+				"scm.experimental.showHistoryGraph": true,
+				"editor.renderLineHighlight": "none",
+				"editor.cursorSmoothCaretAnimation": "off",
+				"workbench.colorCustomizations": {
+					"git.blame.editorDecorationForeground": "#c7c7c788"
+				},
+				"editor.formatOnSave": true,
 				"dev.containers.forwardWayland": false,
-				"terminal.integrated.defaultProfile.linux": "zsh",				
-				"git.autocrlf": "input",				
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"git.autocrlf": "input",
 				"editor.insertSpaces": true,
 				"editor.tabSize": 4,
 				"editor.renderIndentGuides": true,
@@ -87,15 +96,8 @@
 	],
 	"runArgs": [
 		"--security-opt",
-		"label=disable",
-		"--device", "/dev/dri/card1:/dev/dri/card1",
-		"--device", "/dev/dri/renderD128:/dev/dri/renderD128",
-		"--ipc", "host"
+		"label=disable"
 	],
-	"containerEnv": {
-		"HOST_VIDEO_GID": "482",
-		"HOST_RENDER_GID": "485"
-	},
 	"remoteEnv": {
 		"JAVA_HOME": "/home/vscode/.local/share/mise/installs/java/latest",
 		"MISE_TRUSTED_CONFIG_PATHS": "/workspace",
@@ -105,7 +107,7 @@
 	"workspaceFolder": "/workspace",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
 	"onCreateCommand": "sudo chown -R vscode:vscode /workspace",
-	"updateContentCommand": "chmod +x .devcontainer/dev/boostrap.sh && .devcontainer/dev/boostrap.sh",
+	"updateContentCommand": "chmod +x .devcontainer/dev/scripts/boostrap.sh && .devcontainer/dev/scripts/boostrap.sh",
 	"containerUser": "vscode",
 	"remoteUser": "vscode"
 }
