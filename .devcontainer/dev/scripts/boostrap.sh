@@ -35,11 +35,16 @@ alias ....="cd ../../.."
 alias ~="cd ~"
 alias home="cd ~"
 
+alias pass='gopass '
+alias k='kill -9'
+alias up='sudo apt-get update -y && sudo apt-get upgrade -y'
+alias sdk='mise '
+
 alias g="./gradlew"
 alias gbuild="./gradlew clean build -x test"
 alias grun="./gradlew bootRun"
 
-alias gaa="git add -A"
+alias gaa="git add ."
 alias gca="git add --all && git commit --amend --no-edit"
 alias gco="git checkout"
 alias gd='$DOTLY_PATH/bin/dot git pretty-diff'

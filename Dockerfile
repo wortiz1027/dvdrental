@@ -45,8 +45,11 @@ RUN java -Djarmode=layertools -jar /build/build/libs/*.jar extract
 FROM eclipse-temurin:25-jre-alpine AS runner
 WORKDIR /app
 
-# 1. Crear un usuario de sistema sin privilegios para mitigar exploits de seguridad
-RUN addgroup -S spring && adduser -S spring -G spring
+# 1. Crear un usuario de sistema sin shell interactiva para mitigar exploits de terminal
+RUN addgroup -S spring && adduser -S spring -G spring -h /app -s /sbin/nologin
+
+# 2. Remover gestores de paquetes y utilidades vulnerables del contenedor final
+RUN rm -rf /var/cache/apk/* /lib/apk/db/*
 USER spring:spring
 
 ARG BUILD_DATE
@@ -74,7 +77,7 @@ COPY --from=builder /build/extracted/snapshot-dependencies/ ./
 COPY --from=builder /build/extracted/application/ ./
 
 # 3. Configuración de variables de entorno críticas para Alta Concurrencia
-ENV JAVA_OPTS="-XX:+UseZGC -XX:+ZGenerational -XX:+UnlockDiagnosticVMOptions -XX:+IdleTuningGcOnIdle -Dfile.encoding=UTF-8"
+ENV JAVA_OPTS="-XX:+UseZGC -XX:+ZGenerational -XX:+UnlockDiagnosticVMOptions -Dfile.encoding=UTF-8 -XX:+AlwaysPreTouch -Xss256k"
 
 # 4. Exponer los puertos de los tres protocolos de entrada que utilizaremos
 EXPOSE 8080 9090 50051
