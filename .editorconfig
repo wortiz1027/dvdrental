@@ -1,0 +1,39 @@
+# http://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# --- Archivos de Código Fuente Java ---
+[*.java]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+# --- Archivos de Configuración de Compilación (Gradle) ---
+[*.{gradle,gradle.kts,kts}]
+indent_style = space
+indent_size = 4
+max_line_length = 140
+
+# --- Archivos de Configuración Estructurados (YAML / JSON / XML) ---
+[*.{yml,yaml,json,xml}]
+indent_style = space
+indent_size = 2
+
+# --- Archivos Markdown (Documentación / Docsify) ---
+[*.md]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+
+# --- Archivos Docker y Scripts del Sistema ---
+[{Dockerfile,.dockerignore,*.sh}]
+indent_style = space
+indent_size = 4
+end_of_line = lf

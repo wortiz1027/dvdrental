@@ -1,11 +1,11 @@
 {
 	"name": "🍃 Ubuntu :: Spring Boot {DvD Rental} 🍃",
 	"image": "mcr.microsoft.com/devcontainers/base:resolute",
-	"hostRequirements": {
-		"cpus": 2,
+  "hostRequirements": {
+    "cpus": 2,
 		"memory": "6gb",
 		"storage": "5gb",
-		"gpu": false
+    "gpu": false
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {
@@ -40,7 +40,8 @@
 				"redhat.vscode-yaml",
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
-				"GraphQL.vscode-graphql-syntax"
+				"GraphQL.vscode-graphql-syntax",
+				"tamasfe.even-better-toml"
 			],
 			"settings": {
 				"git.blame.editorDecoration.enabled": true,
@@ -69,7 +70,7 @@
 						"path": "/home/vscode/.local/share/mise/installs/java/latest",
 						"default": true
 					}
-				]				
+				]
 			}
 		}
 	},
