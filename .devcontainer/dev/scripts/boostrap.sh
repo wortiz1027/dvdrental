@@ -23,3 +23,35 @@ echo "¡Gopass instalado con éxito!"
 
 curl https://mise.run | sh && echo 'echo 'eval "$(mise activate zsh)"' >> ~/.zshrc' >> ~/.zshrc && /home/vscode/.local/bin/mise install && /home/vscode/.local/bin/mise run git:init
 
+echo "🎯 Configurando alias personalizados de Unix..."
+
+# Definir la lista de alias indispensables para este proyecto de alta carga
+cat << 'EOF' >> ~/.zshrc
+
+# --- Alias Personalizados DVD Rental ---
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias ~="cd ~"
+alias home="cd ~"
+
+alias g="./gradlew"
+alias gbuild="./gradlew clean build -x test"
+alias grun="./gradlew bootRun"
+
+alias gaa="git add -A"
+alias gca="git add --all && git commit --amend --no-edit"
+alias gco="git checkout"
+alias gd='$DOTLY_PATH/bin/dot git pretty-diff'
+alias gs="git status -sb"
+alias gf="git fetch --all -p"
+alias gps="git push"
+alias gpsf="git push --force"
+alias gpl="git pull --rebase --autostash"
+alias gb="git branch"
+alias gl='$DOTLY_PATH/bin/dot git pretty-log'
+alias glg="git log --oneline --graph --decorate"
+# --------------------------------------
+EOF
+
+echo "✅ Alias inyectados con éxito."
