@@ -1,6 +1,6 @@
 spring:
   application:
-    name: dvd-rental-high-scale
+    name: dvd-rental
   output:
     ansi:
       enabled: ALWAYS
