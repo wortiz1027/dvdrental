@@ -97,7 +97,8 @@
 	],
 	"runArgs": [
 		"--security-opt",
-		"label=disable"
+		"label=disable",
+    "--network=ntw_servers"
 	],
 	"remoteEnv": {
 		"JAVA_HOME": "/home/vscode/.local/share/mise/installs/java/latest",
