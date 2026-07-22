@@ -47,7 +47,7 @@ Este documento detalla los 5 casos de uso críticos identificados a partir del d
 
 ---
 
-### 🔍 4. SearchAvailableFilmsUseCase (Buscar Películas Disponibles por Categoría)
+### 🔍 4. SearchAvailableFilmsUseCase (Buscar Películas Disponibles por Categoría) X
 
 <img src="https://unsplash.com" width="100%" alt="Movie Shelves and Archive Catalog" />
 
