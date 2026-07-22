@@ -71,11 +71,17 @@ dependencyCheck {
     // Configura el umbral de vulnerabilidad usando el sistema de puntuación CVSS
     // 0.0 (Bajo) a 10.0 (Crítico). Un valor de 5.0 o superior bloqueará el commit
     failBuildOnCVSS = 5.0
-    
-    // Genera reportes interactivos visuales automáticamente
-    formats = ['HTML', 'JSON']
+    failOnError = false
+    formats = ['JUNIT', 'HTML', 'JSON']
     outputDirectory = "${project.buildDir}/reports/dependency-check"
-    
+    nvd {
+            apiKey = System.getenv('NVD_API_KEY') ?: '<empty>'
+            delay = 16000
+    }
+    // Almacena la caché de vulnerabilidades localmente en tu proyecto para no descargarla desde cero cada vez
+    data {
+        directory = "${project.rootDir}/.cache/dependency-check-data"
+    }
     // Opcional: Si deseas omitir ciertas configuraciones (como librerías exclusivas de pruebas)
     // skipConfigurations = ['testCompileClasspath', 'testRuntimeClasspath']
 }

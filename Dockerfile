@@ -1,6 +1,6 @@
 # -------------------------------------------------------------
 # - DOCKERFILE
-# - AUTOR: @DevSoft eam
+# - AUTOR: @DevSoft Team
 # - FECHA: 21-ulio-2026
 # - DESCRIPCION: Docker compose file que permite la
 # -              creacion de 1 contendor para el servicio de
@@ -42,14 +42,12 @@ RUN java -Djarmode=layertools -jar /build/build/libs/*.jar extract
 # ==========================================
 # FASE 2: Entorno de Ejecución (Runtime Stage)
 # ==========================================
-FROM eclipse-temurin:25-jre-alpine AS runner
+FROM dhi.io/eclipse-temurin:25-alpine AS runner
 WORKDIR /app
 
 # 1. Crear un usuario de sistema sin shell interactiva para mitigar exploits de terminal
-RUN addgroup -S spring && adduser -S spring -G spring -h /app -s /sbin/nologin
+RUN addgroup -S spring && adduser -S spring -G spring -h /app -s /sbin/nologin && rm -rf /var/cache/apk/* /lib/apk/db/*
 
-# 2. Remover gestores de paquetes y utilidades vulnerables del contenedor final
-RUN rm -rf /var/cache/apk/* /lib/apk/db/*
 USER spring:spring
 
 ARG BUILD_DATE
@@ -58,13 +56,13 @@ ARG BUILD_REVISION
 
 # Informacion de la persona que mantiene la imagen
 LABEL org.opencontainers.image.created=$BUILD_DATE \
-	  org.opencontainers.image.authors="@DevSoft team" \
+	  org.opencontainers.image.authors="@DevSoft Team" \
 	  org.opencontainers.image.url="https://github.com/wortiz1027/dvdrental/blob/main/Dockerfile" \
 	  org.opencontainers.image.documentation="" \
 	  org.opencontainers.image.source="https://github.com/wortiz1027/dvdrental/blob/main/Dockerfile" \
 	  org.opencontainers.image.version=$BUILD_VERSION \
 	  org.opencontainers.image.revision=$BUILD_REVISION \
-	  org.opencontainers.image.vendor="Seguros Alfa | https://www.devsoft.com.co/" \
+	  org.opencontainers.image.vendor="Develment Software Team | https://www.devsoft.com.co/" \
 	  org.opencontainers.image.licenses="" \
 	  org.opencontainers.image.title="Backend para la gestion de renta de dvds" \
 	  org.opencontainers.image.description="Componente encargado de gestionar la informacion de la renta de dvds"
