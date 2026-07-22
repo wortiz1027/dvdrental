@@ -31,8 +31,6 @@
 		},
 		"vscode": {
 			"extensions": [
-				"SonarSource.sonarlint-vscode",
-				"snyk-security.snyk-vulnerability-scanner",
 				"anweber.vscode-httpyac",
 				"esbenp.prettier-vscode",
 				"EditorConfig.EditorConfig",
@@ -41,7 +39,9 @@
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
 				"GraphQL.vscode-graphql-syntax",
-				"tamasfe.even-better-toml"
+				"tamasfe.even-better-toml",
+				"GitHub.github-vscode-theme",
+				"zhuangtongfa.material-theme"
 			],
 			"settings": {
 				"git.blame.editorDecoration.enabled": true,

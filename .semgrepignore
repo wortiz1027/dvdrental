@@ -1,0 +1,45 @@
+# ==============================================================================
+# 📦 1. Compilación y Artefactos de Java/Gradle
+# ==============================================================================
+build/
+.gradle/
+*.jar
+*.war
+*.class
+
+# ==============================================================================
+# 🔐 2. Carpetas Ocultas, Entornos y Cachés Locales (Mise, Git, IDEs)
+# ==============================================================================
+.git/
+.cache/
+.devcontainer/
+.vscode/
+.idea/
+*.iml
+.mise/
+.mise.toml
+
+# ==============================================================================
+# 💾 3. Respaldos y Archivos de Datos (PostgreSQL DVD Rental)
+# ==============================================================================
+*.tar
+*.zip
+*.sql
+*.json.raw
+# Ignorar el volcado raw que genera Trivy en segundo plano para procesar el JSON
+**/dependency-check/raw.json
+
+# ==============================================================================
+# 📊 4. Reportes Generados e Infraestructura de Telemetría
+# ==============================================================================
+**/reports/
+*.jfr
+*.sarif
+*.html
+
+# ==============================================================================
+# 📜 5. Archivos de Texto y Documentación del Sistema
+# ==============================================================================
+*.md
+*.txt
+LICENSE

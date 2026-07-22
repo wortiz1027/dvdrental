@@ -1,0 +1,70 @@
+/* ===== Custom JaCoCo Report Theme ===== */
+
+body,
+td {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 10pt;
+    color: #24292f;
+}
+
+body {
+    background: #f6f8fa;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Breadcrumb navigation */
+.breadcrumb {
+    background: #fff;
+    border: 1px solid #d0d7de;
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+}
+
+/* Coverage table */
+table.coverage {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #d0d7de;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    background: #fff;
+}
+
+table.coverage thead {
+    background: #f6f8fa;
+}
+
+table.coverage thead td {
+    padding: 10px 14px;
+    border-bottom: 2px solid #d0d7de;
+    font-weight: 700;
+}
+
+table.coverage tbody td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eaeef2;
+}
+
+table.coverage tbody tr:hover {
+    background: rgba(102, 126, 234, 0.04) !important;
+}
+
+/* Source code coverage highlights */
+pre.source span.fc {
+    background-color: #dafbe1;
+}
+
+/* fully covered - green */
+pre.source span.nc {
+    background-color: #ffeef0;
+}
+
+/* not covered - red */
+pre.source span.pc {
+    background-color: #fff8c5;
+}
+
+/* partially covered - yellow */

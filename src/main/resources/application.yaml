@@ -1,4 +1,7 @@
 spring:
+  main:
+    # 🚀 Inicializa el contexto en paralelo acelerando drásticamente el startup
+    lazy-initialization: false
   application:
     name: dvd-rental
   output:

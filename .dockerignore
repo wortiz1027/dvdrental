@@ -3,6 +3,8 @@
 build/
 bin/
 out/
+scripts/
+docs/
 
 # --- Reportes y Archivos Temporales ---
 .gradle-tasks-logs/

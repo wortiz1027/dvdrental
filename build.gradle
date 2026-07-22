@@ -1,10 +1,12 @@
 plugins {
 	id 'java'
+    id 'jacoco'
 	id 'checkstyle'
 	id 'org.springframework.boot' version '4.1.0'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id "org.owasp.dependencycheck" version "12.2.2"
 	id 'com.diffplug.spotless' version '8.8.0'
+    id 'org.springframework.boot.aot' version '3.4.0'
 }
 
 group = 'co.com.devsoft'
@@ -35,6 +37,7 @@ dependencies {
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework:spring-context-indexer'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
@@ -49,6 +52,7 @@ dependencies {
 	testImplementation 'org.testcontainers:testcontainers-postgresql'
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.2'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
@@ -58,7 +62,43 @@ dependencyLocking {
 
 tasks.named('test') {
 	useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
+
+jacoco {
+    toolVersion = "0.8.15"
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        xml.required = true
+        csv.required = false
+        html.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+    doLast {
+        copy {
+            from 'src/main/resources/jacoco/report.css'
+            into "${buildDir}/reports/jacoco/test/html/jacoco-resources"
+        }
+    }
+}
+
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.80
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
 
 checkstyle {
     toolVersion = '13.8.0'
@@ -68,8 +108,6 @@ checkstyle {
 }
 
 dependencyCheck {
-    // Configura el umbral de vulnerabilidad usando el sistema de puntuación CVSS
-    // 0.0 (Bajo) a 10.0 (Crítico). Un valor de 5.0 o superior bloqueará el commit
     failBuildOnCVSS = 5.0
     failOnError = false
     formats = ['JUNIT', 'HTML', 'JSON']
@@ -78,12 +116,9 @@ dependencyCheck {
             apiKey = System.getenv('NVD_API_KEY') ?: '<empty>'
             delay = 16000
     }
-    // Almacena la caché de vulnerabilidades localmente en tu proyecto para no descargarla desde cero cada vez
     data {
         directory = "${project.rootDir}/.cache/dependency-check-data"
     }
-    // Opcional: Si deseas omitir ciertas configuraciones (como librerías exclusivas de pruebas)
-    // skipConfigurations = ['testCompileClasspath', 'testRuntimeClasspath']
 }
 
 spotless {

@@ -1,0 +1,99 @@
+rules:
+  - id: hexagonal-architecture-domain-isolation
+    languages:
+      - java
+    severity: ERROR
+    message: "\U0001F6A8 Violación de Arquitectura Hexagonal: La capa de DOMINIO debe ser pura.\nEstá terminantemente prohibido importar frameworks (Spring, JPA, Hibernate) o adaptadores en este paquete.\n"
+    paths:
+      include:
+        - src/main/java/com/example/dvdrental/domain/**
+    pattern-either:
+      - pattern: import org.springframework.$ANY;
+      - pattern: import jakarta.persistence.$ANY;
+      - pattern: import org.hibernate.$ANY;
+      - pattern: import com.example.dvdrental.adapters.$ANY;
+  - id: prevent-sql-injection-in-custom-queries
+    languages:
+      - java
+    severity: ERROR
+    message: "\U0001F6A8 Riesgo Crítico de Seguridad (SQL Injection): Detectada concatenación directa de Strings en consultas SQL.\nBajo 16,000 req/sec, esto permite la exfiltración masiva de datos. Usa consultas parametrizadas o PreparedStatement.\n"
+    pattern-either:
+      - pattern: $JDBC.execute("..." + $VAR);
+      - pattern: $JDBC.executeQuery("..." + $VAR);
+      - pattern: $EM.createNativeQuery("..." + $VAR);
+  - id: prevent-blocking-threads-on-virtual-threads
+    languages:
+      - java
+    severity: WARNING
+    message: >
+      ⚠️ Alerta de Rendimiento: El uso de 'Thread.sleep()' síncrono bloquea el
+      Carrier Thread de la JVM.
+
+      Para soportar 1 millón de clientes por minuto con Virtual Threads, evalúa
+      usar mecanismos asíncronos no bloqueantes.
+    pattern: Thread.sleep($TIME);
+  - id: dockerfile-user-not-declared
+    languages:
+      - dockerfile
+    severity: ERROR
+    message: "\U0001F6A8 Riesgo de Seguridad en Infraestructura: El Dockerfile no declara un usuario sin privilegios.\nPara producción bajo dhi.io, es obligatorio usar 'USER springuser' para mitigar exploits del kernel.\n"
+    patterns:
+      - pattern: FROM $IMAGE
+      - pattern-not-inside: |
+          ...
+          USER $USER
+          ...
+  - id: yaml-docker-compose-privileged-mode
+    languages:
+      - yaml
+    severity: ERROR
+    message: "\U0001F6A8 Riesgo Crítico en Docker Compose: Se detectó el flag 'privileged: true'.\nEsto le otorga al contenedor acceso total al hardware de la máquina anfitriona, anulando el aislamiento de red.\n"
+    patterns:
+      - pattern: |
+          privileged: true
+  - id: detect-hardcoded-db-credentials
+    languages:
+      - yaml
+      - json
+      - bash
+    severity: ERROR
+    message: "\U0001F6A8 Fuga de Seguridad: Detectada posible contraseña o usuario de base de datos en texto plano.\nRecuerda que todas las credenciales deben inyectarse mediante variables de entorno desde Gopass/Mise.\n"
+    pattern-regex: >-
+      (?i)(password|passwd|secret|db_password)\s*[:=]\s*["']?[a-zA-Z0-9_\-\.\!@#\$%\^&\*\(\)]{4,30}["']?
+  - id: bash-missing-strict-mode
+    languages:
+      - bash
+    severity: ERROR
+    message: "\U0001F6A8 Mala práctica en Script de Bash: Falta activar el modo estricto 'set -e' o 'set -u'.\nBajo automatizaciones con 'mise', si un comando falla (ej. falla la descarga de async-profiler),\nel script debe detenerse de inmediato en lugar de continuar con variables vacías corruptas.\n"
+    patterns:
+      - pattern: |
+          #!/usr/bin/env bash
+          ...
+      - pattern-not: |
+          #!/usr/bin/env bash
+          set -$FLAGS
+          ...
+    paths:
+      exclude:
+        - .git/hooks/**
+  - id: bash-dangerous-sudo-usage
+    languages:
+      - bash
+    severity: WARNING
+    message: >
+      ⚠️ Alerta de Seguridad en Bash: Uso del comando 'sudo'.
+
+      Asegúrate de que la elevación de privilegios sea estrictamente necesaria
+      (como el ajuste de sysctl del kernel).
+
+      Nunca ejecutes la aplicación de Spring Boot o k6 con sudo para evitar
+      escaladas de privilegios.
+    patterns:
+      - pattern: sudo $CMD
+      - pattern-not: sudo sysctl -$FLAGS
+  - id: bash-prevent-eval-injection
+    languages:
+      - bash
+    severity: ERROR
+    message: "\U0001F6A8 Riesgo Crítico de Inyección en Bash: Detectado el uso de 'eval' con variables dinámicas.\nEsto permite que un atacante inyecte comandos arbitrarios en la terminal si manipula los argumentos del script.\n"
+    pattern: eval ... $VAR
