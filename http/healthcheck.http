@@ -1,0 +1,34 @@
+@HOSTNAME = localhost
+@PORT = 8080
+
+# @title Get Actuator
+# @description Get healthcheck Status Details
+GET http://{{HOSTNAME}}:{{PORT}}/actuator/health
+Content-Type: application/json
+{{
+  const { equal } = require('assert');
+  test('status code 200', () => {
+    equal(response.statusCode, 200);
+  });
+}}
+
+###
+
+GET https://httpbin.org/json
+
+{{
+  const { equal } = require('assert');
+
+  test('status code 200', () => {
+    equal(response.statusCode, 200);
+  });
+
+  test('validate slides title', () => {
+    equal(response.parsedBody.slideshow.slides[0].title, "Wake up to WonderWidgets!")
+  });
+
+  test('validate slideshow title', () => {
+    equal(response.parsedBody.slideshow.title, "Sample Slide Show")
+  });
+
+}}

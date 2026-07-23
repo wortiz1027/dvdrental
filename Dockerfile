@@ -21,21 +21,15 @@
 FROM eclipse-temurin:25-jdk-alpine AS builder
 WORKDIR /build
 
-# 1. Copiar las herramientas de empaquetado de Gradle
 COPY gradle/ gradle/
 COPY gradlew build.gradle settings.gradle gradle.properties ./
 
-# 2. Descargar dependencias en caché (Truco de velocidad para Docker)
-# Ejecuta un build vacío para cachear las librerías sin recompilar código mutado
 RUN ./gradlew dependencies --no-daemon || true
 
-# 3. Copiar el código fuente del proyecto
 COPY src/ src/
 
-# 4. Compilar y empaquetar la aplicación omitiendo pruebas unitarias para el artefacto final
 RUN ./gradlew bootJar --no-daemon -x test
 
-# 5. Extraer las capas del JAR para optimizar el almacenamiento en Docker
 WORKDIR /build/extracted
 RUN java -Djarmode=layertools -jar /build/build/libs/*.jar extract
 
@@ -67,18 +61,13 @@ LABEL org.opencontainers.image.created=$BUILD_DATE \
 	  org.opencontainers.image.title="Backend para la gestion de renta de dvds" \
 	  org.opencontainers.image.description="Componente encargado de gestionar la informacion de la renta de dvds"
 
-# 2. Copiar cada capa del JAR de forma independiente desde la fase de compilación
-# Esto permite que si cambias una clase, Docker solo actualice la mini-capa de la aplicación (application)
 COPY --from=builder /build/extracted/dependencies/ ./
 COPY --from=builder /build/extracted/spring-boot-loader/ ./
 COPY --from=builder /build/extracted/snapshot-dependencies/ ./
 COPY --from=builder /build/extracted/application/ ./
 
-# 3. Configuración de variables de entorno críticas para Alta Concurrencia
 ENV JAVA_OPTS="-XX:+UseZGC -XX:+ZGenerational -XX:+UnlockDiagnosticVMOptions -Dfile.encoding=UTF-8 -XX:+AlwaysPreTouch -Xss256k"
 
-# 4. Exponer los puertos de los tres protocolos de entrada que utilizaremos
 EXPOSE 8080 9090 50051
 
-# 5. Lanzar la aplicación usando el cargador nativo de capas de Spring Boot
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS org.springframework.boot.loader.launch.JarLauncher"]

@@ -41,7 +41,8 @@
 				"GraphQL.vscode-graphql-syntax",
 				"tamasfe.even-better-toml",
 				"GitHub.github-vscode-theme",
-				"zhuangtongfa.material-theme"
+				"zhuangtongfa.material-theme",
+				"Semgrep.semgrep"
 			],
 			"settings": {
 				"git.blame.editorDecoration.enabled": true,
@@ -53,6 +54,9 @@
 					"git.blame.editorDecorationForeground": "#c7c7c788"
 				},
 				"editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        },
 				"dev.containers.forwardWayland": false,
 				"terminal.integrated.defaultProfile.linux": "zsh",
 				"git.autocrlf": "input",
