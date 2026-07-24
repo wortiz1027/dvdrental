@@ -1,5 +1,6 @@
 @HOSTNAME = localhost
 @PORT = 8080
+###
 
 # @title Get Actuator
 # @description Get healthcheck Status Details
@@ -11,10 +12,21 @@ Content-Type: application/json
     equal(response.statusCode, 200);
   });
 }}
-
 ###
 
-GET https://httpbin.org/json
+# @title Get Info
+# @description prueba para entender como funcionan los .env y extraer data segura de variables del SO
+{{
+    exports.secret_key = process.env.API_SECRET_KEY;
+
+    exports.tlt = process.env.TITLE;
+
+}}
+@myid=dBBg5uRBE2eZbvMVbGD40DTdEL6wTGak
+GET http://{{HOSTNAME}}:{{PORT}}/api/info/{{myid}}
+Content-Type: application/json
+x-secret-key: {{secret_key}}
+x-title: {{tlt}}
 
 {{
   const { equal } = require('assert');
@@ -24,11 +36,12 @@ GET https://httpbin.org/json
   });
 
   test('validate slides title', () => {
-    equal(response.parsedBody.slideshow.slides[0].title, "Wake up to WonderWidgets!")
+    equal(response.parsedBody.status, "UP")
   });
 
   test('validate slideshow title', () => {
-    equal(response.parsedBody.slideshow.title, "Sample Slide Show")
+    equal(response.parsedBody.secret, "936DA01F-9ABD-4D9D-80C7-02AF85C822A8")
   });
 
 }}
+###

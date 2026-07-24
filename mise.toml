@@ -18,11 +18,11 @@ temurin = "temurin-25.0.3+9.0.LTS"
 latest = "9.6.1"
 
 [env]
-JAVA_HOME = "/home/vscode/.local/share/mise/installs/java/latest"
-GRADLE_HOME = "/home/vscode/.local/share/mise/installs/gradle/latest"
 _.path = [
     "/home/vscode/.local/share/mise/installs/java/latest/bin:/home/vscode/.local/share/mise/installs/gradle/latest/bin",
 ]
+JAVA_HOME = "/home/vscode/.local/share/mise/installs/java/latest"
+GRADLE_HOME = "/home/vscode/.local/share/mise/installs/gradle/latest"
 GRADLE_OPTS = "-Dorg.gradle.console=rich -Xmx2g -XX:+UseZGC"
 
 [tasks]
@@ -47,7 +47,6 @@ GRADLE_OPTS = "-Dorg.gradle.console=rich -Xmx2g -XX:+UseZGC"
 "security:trufflehog-gh" = { run = "trufflehog git --only-verified file://. --max-depth=1" }
 "security:dependencies" = { run = "./scripts/check-dependencies.sh" }
 "security:sast" = { run = "./scripts/check-sast.sh" }
-"security:credentials" = { shell = 'bash -c', run = "source scripts/credentials.sh" }
 
 "docs:serve-docs" = { run = "miniserve ./docs --index index.html -p 3001" }
 "docs:serve-sast" = { run = "miniserve ./build/reports/sast --index index.html -p 3002" }

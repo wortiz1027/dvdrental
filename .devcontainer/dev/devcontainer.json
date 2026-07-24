@@ -74,7 +74,8 @@
 						"path": "/home/vscode/.local/share/mise/installs/java/latest",
 						"default": true
 					}
-				]
+				],
+        "spring-boot.livereload.enabled": true
 			}
 		}
 	},
@@ -102,18 +103,23 @@
 	"runArgs": [
 		"--security-opt",
 		"label=disable",
-    "--network=ntw_servers"
+    "--network=ntw_servers",
+    "--env-file",
+    "${localWorkspaceFolder}/.devcontainer/.env.secrets"
 	],
 	"remoteEnv": {
-		"JAVA_HOME": "/home/vscode/.local/share/mise/installs/java/latest",
-		"MISE_TRUSTED_CONFIG_PATHS": "/workspace",
+    "MISE_TRUSTED_CONFIG_PATHS": "/workspace",
+    "JAVA_HOME": "/home/vscode/.local/share/mise/installs/java/latest",
 		"GOPASS_HOMEDIR": "${containerWorkspaceFolder}/../",
 		"GOPASS_STORE_DIR": "${containerWorkspaceFolder}/../.local/share/gopass/stores/root"
 	},
 	"workspaceFolder": "/workspace",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "initializeCommand": "./.devcontainer/dev/scripts/sync-secrets.sh",
+
 	"onCreateCommand": "sudo chown -R vscode:vscode /workspace",
 	"updateContentCommand": "chmod +x .devcontainer/dev/scripts/boostrap.sh && .devcontainer/dev/scripts/boostrap.sh",
+  "postStartCommand": "rm -f ${containerWorkspaceFolder}/.devcontainer/.env.secrets",
 	"containerUser": "vscode",
 	"remoteUser": "vscode"
 }
